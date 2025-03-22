@@ -46,15 +46,82 @@ session_start();
             return header("Location: create.php");
         }
 
-
-        dd("Continuer la partie");
-
-
         // 3- Définir les contraintes de validation du formulaire
+        $formErrors = [];
+
+        if ( isset($_POST['title']) ) 
+        {
+            if ( trim($_POST['title']) === "" )
+            {
+                $formErrors['title'] = "Le titre du film est obligatoire.";
+            }
+            
+            if ( mb_strlen($_POST['title']) > 255) 
+            {
+                $formErrors['title'] = "Le titre du film ne doit pas dépasser 255 caractères.";
+            }
+        }
+
+
+        if ( isset($_POST['actors']) ) 
+        {
+            if ( trim($_POST['actors']) === "" )
+            {
+                $formErrors['actors'] = "Le nom du/des acteurs du film est obligatoire.";
+            }
+            
+            if ( mb_strlen($_POST['actors']) > 255) 
+            {
+                $formErrors['actors'] = "Le nom du/des acteurs du film ne doit pas dépasser 255 caractères.";
+            }
+        }
+
+
+        if ( isset($_POST['review']) ) 
+        {
+            if ( trim($_POST['review']) !== "" ) 
+            {
+                if ( !is_numeric($_POST['review']) )
+                {
+                    $formErrors['review'] = "La note du film doit être un nombre.";
+                }
+
+                if ( $_POST['review'] < '0' || $_POST['review'] > '5' ) 
+                {
+                    $formErrors['review'] = "La note du film doit être comprise entre 0 et 5.";
+                }
+            }
+        }
+
+
+        if ( isset($_POST['comment']) ) 
+        {
+            if ( trim($_POST['comment']) !== "" ) 
+            {
+                if ( mb_strlen($_POST['actors']) > 500) 
+                {
+                    $formErrors['actors'] = "Le commentaire du film ne doit pas dépasser 500 caractères.";
+                }
+            }
+        }
 
         // 4- Si le formulaire est invalide
+        if ( count($formErrors) > 0 ) 
+        {
+
+            // Sauvegardons les messages d'erreur en session
+            $_SESSION['formErrors'] = $formErrors;
+            
+            
+            // Sauvegardons les anciennes données du formulaire en session
+            $_SESSION['old'] = $_POST;
+
             // Rediriger l'utilisateur vers la page de laquelle proviennent les informations
             // Puis, arrêter l'exécution du script.
+            return header("Location: create.php");
+        }
+
+        dd("Continuer la partie");
         
         // Dans le cas contraire,
         // 5- Arrondir la note à un chiffre après la virgule
@@ -87,22 +154,34 @@ session_start();
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-lg-5 mx-auto p-4 shadow rounded bg-white">
+
+                    <?php if(isset($_SESSION['formErrors']) && !empty($_SESSION['formErrors']) ) : ?>
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                <?php foreach($_SESSION['formErrors'] as $error) : ?>
+                                    <li><?= $error ?></li>
+                                <?php endforeach ?>
+                            </ul>
+                        </div>
+                        <?php unset($_SESSION['formErrors']); ?>
+                    <?php endif ?>
+
                     <form method="post">
                         <div class="mb-3">
                             <label for="title">Titre du film <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="title" class="form-control" autofocus>
+                            <input type="text" name="title" id="title" class="form-control" autofocus value="<?= old($_SESSION['old'], 'title'); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="actors">Nom du/des acteurs <span class="text-danger">*</span></label>
-                            <input type="text" name="actors" id="actors" class="form-control">
+                            <input type="text" name="actors" id="actors" class="form-control" value="<?= old($_SESSION['old'], 'actors'); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="review">Note / 5</label>
-                            <input type="number" min="0" max="5" step=".1" name="review" id="review" class="form-control">
+                            <input type="number" min="0" max="5" step=".1" name="review" id="review" class="form-control" value="<?= old($_SESSION['old'], 'review'); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="comment">Laissez un commentaire</label>
-                            <textarea name="comment" id="comment" class="form-control" rows="4"></textarea>
+                            <textarea name="comment" id="comment" class="form-control" rows="4"><?= old($_SESSION['old'], 'comment'); ?></textarea>
                         </div>
                         <div>
                             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
@@ -111,7 +190,7 @@ session_start();
                             <input type="hidden" name="honey_pot" value="">
                         </div>
                         <div>
-                            <input type="submit" class="btn btn-primary shadow">
+                            <input formnovalidate type="submit" class="btn btn-primary shadow">
                         </div>
                     </form>
                 </div>
