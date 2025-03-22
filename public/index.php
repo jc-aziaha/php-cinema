@@ -1,4 +1,6 @@
 <?php
+session_start();
+
     $title = "Accueil";
     $description = "Liste des films";
     $keywords = "accueil, liste, films";
@@ -13,6 +15,15 @@ HTML;
     <!-- Le contenu spécifique à cette page -->
     <main>
         <h1 class="text-center my-3 display-5">Liste des films</h1>
+
+        <?php if(isset($_SESSION['success']) && !empty($_SESSION['success']) ): ?>
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                <?= $_SESSION['success'] ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif ?>
+
         <div class="container">
             <div class="d-flex justify-content-end align-items-center my-3">
                 <a href="/create.php" class="btn btn-primary shadow"><i class="fa-solid fa-plus"></i> Nouveau film</a>
