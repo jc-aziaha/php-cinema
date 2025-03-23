@@ -169,7 +169,7 @@ session_start();
                         <div class="alert alert-danger" role="alert">
                             <ul>
                                 <?php foreach($_SESSION['formErrors'] as $error) : ?>
-                                    <li><?= $error ?></li>
+                                    <li><?= e($error) ?></li>
                                 <?php endforeach ?>
                             </ul>
                         </div>
@@ -179,22 +179,22 @@ session_start();
                     <form method="post">
                         <div class="mb-3">
                             <label for="title">Titre du film <span class="text-danger">*</span></label>
-                            <input type="text" name="title" id="title" class="form-control" autofocus value="<?= old($_SESSION['old'], 'title'); ?>">
+                            <input type="text" name="title" id="title" class="form-control" autofocus value="<?= e(old($_SESSION['old'], 'title')); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="actors">Nom du/des acteurs <span class="text-danger">*</span></label>
-                            <input type="text" name="actors" id="actors" class="form-control" value="<?= old($_SESSION['old'], 'actors'); ?>">
+                            <input type="text" name="actors" id="actors" class="form-control" value="<?= e(old($_SESSION['old'], 'actors')); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="review">Note / 5</label>
-                            <input type="number" min="0" max="5" step=".1" name="review" id="review" class="form-control" value="<?= old($_SESSION['old'], 'review'); ?>">
+                            <input type="number" min="0" max="5" step=".1" name="review" id="review" class="form-control" value="<?= e(old($_SESSION['old'], 'review')); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="comment">Laissez un commentaire</label>
-                            <textarea name="comment" id="comment" class="form-control" rows="4"><?= old($_SESSION['old'], 'comment'); ?></textarea>
+                            <textarea name="comment" id="comment" class="form-control" rows="4"><?= e(old($_SESSION['old'], 'comment')); ?></textarea>
                         </div>
                         <div>
-                            <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                            <input type="hidden" name="csrf_token" value="<?= e($_SESSION['csrf_token']) ?>">
                         </div>
                         <div>
                             <input type="hidden" name="honey_pot" value="">

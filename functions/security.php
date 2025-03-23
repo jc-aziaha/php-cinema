@@ -59,3 +59,20 @@
         unset($_POST['honey_pot']);
         return true;
     }
+
+
+    /**
+     * Protège le système contre les failles de stype Xss.
+     *
+     * @param string $data
+     * @return string
+     */
+    function e(string|null $data): string
+    {
+        if ( isset($data) ) 
+        {
+            return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+        }
+
+        return '';
+    }
