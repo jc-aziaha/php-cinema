@@ -28,3 +28,27 @@
             throw new \Exception($exception->getMessage());
         }
     }
+
+
+
+    /**
+     * Permet de récupérer tous les films de la base de données.
+     *
+     * @param PDO $db
+     * @return array
+     */
+    function findAll(PDO $db): array
+    {
+        try 
+        {
+            $req = $db->prepare("SELECT * FROM film ORDER BY created_at DESC");
+            $req->execute();
+            $data = $req->fetchAll();
+            $req->closeCursor();
+            return $data;
+        } 
+        catch (\PDOException $exception) 
+        {
+            throw new Exception($exception->getMessage());
+        }
+    }

@@ -10,7 +10,7 @@
 
         <!-- Le titre de chaque page affiché dans l'onglet -->
         <?php if( isset($title) && !empty($title) ) : ?>
-            <title><?= $title ?> - Cinema</title>
+            <title><?= e($title) ?> - Cinema</title>
         <?php else : ?>
             <title>Cinema</title>
         <?php endif ?>
@@ -18,12 +18,12 @@
         <!-- SEO -->
         <?php if( isset($description) && !empty($description) ) : ?>
             <!-- La description de chaque page -->
-            <meta name="description" content="<?= $description ?>">
+            <meta name="description" content="<?= e($description) ?>">
         <?php endif ?>
 
         <?php if( isset($keywords) && !empty($keywords) ) : ?>
             <!-- Les mots clés spécifiques à chaque page -->
-            <meta name="keywords" content="<?= $keywords ?>">
+            <meta name="keywords" content="<?= e($keywords) ?>">
         <?php endif ?>
 
         <meta name="author" content="dwwm">
